@@ -21,7 +21,7 @@ jobs:
 
       # Install dependencies
       - name: Install dependencies
-        run: pip install httpx pytz python-dateutil
+        run: pip install httpx pytz python-dateutil beautifulsoup4
 
       # Clone the private repo
       - name: Clone repo
