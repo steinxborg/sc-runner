@@ -1,0 +1,40 @@
+name: ppv
+on:
+  workflow_dispatch:
+
+jobs:
+  fetch_ppv:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install httpx pycryptodome
+
+      - name: Clone private repo
+        run: |
+          git clone https://${{ secrets.SCRAPER_TOKEN }}@github.com/${{ secrets.SCRAPER_REPO }} ppv-repo
+
+      - name: Run Python script
+        run: |
+          cd ppv-repo
+          python ppv.py
+
+      - name: Commit and push output
+        run: |
+          cd ppv-repo
+          git config --global user.name "actions-user"
+          git config --global user.email "actions@github.com"
+          
+          git add ppv.json
+          
+          # Commit only if changes exist
+          git diff --cached --quiet || git commit -m "Update output file"
+          
+          # Push changes
+          git push
