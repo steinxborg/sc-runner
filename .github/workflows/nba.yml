@@ -26,7 +26,7 @@ jobs:
       # Clone the private repo
       - name: Clone repo
         run: |
-          git clone https://${{ secrets.SCRAPER_TOKEN }}@github.com/${{ secrets.SCRAPER_REPO }} $REPO_FOLDER
+          git clone https://${{ secrets.SCRAPER_TOKEN }}@github.com/nba-scraper $REPO_FOLDER
 
       # Run the Python script
       - name: Run Python script
