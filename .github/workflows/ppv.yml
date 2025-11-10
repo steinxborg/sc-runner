@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  fetch_rx:
+  fetch_data:
     runs-on: ubuntu-latest
     env:
       REPO_FOLDER: ppv-repo          # Local folder name for the cloned repo
