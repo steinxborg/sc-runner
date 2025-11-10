@@ -1,0 +1,48 @@
+name: ppv
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+jobs:
+  fetch_one:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout this repository (optional, if you need it)
+      - name: Checkout this repository
+        uses: actions/checkout@v5
+
+      # Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      # Install dependencies
+      - name: Install dependencies
+        run: pip install httpx pycrytodome
+
+      # Checkout private repo
+      - name: Checkout private repo
+        uses: actions/checkout@v5
+        with:
+          repository: ${{ secrets.SCRAPER_REPO }}
+          token: ${{ secrets.SCRAPER_TOKEN }}
+          path: one-folder
+          
+      # Run the Python script from the private repo
+      - name: Run Python Script
+        run: |
+          cd one-folder
+          python one.py
+
+      # Commit and push changes (if needed)
+      - name: Commit and push changes
+        run: |
+          cd one-folder
+          git config --global user.name "actions-user"
+          git config --global user.email "actions@github.com"
+          git add one.txt
+          git diff --staged --quiet || git commit -m "refactor: update one"
+          git push --force
