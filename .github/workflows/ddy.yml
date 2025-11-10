@@ -1,5 +1,8 @@
 name: ddy
 on:
+  schedule:
+    - cron: '0 */6 * * *'  # This runs every six hours
+    
   workflow_dispatch:
 
 jobs:
