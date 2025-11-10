@@ -1,4 +1,4 @@
-name: ppv
+name: one
 on:
   schedule:
     - cron: "0 0 * * *"
