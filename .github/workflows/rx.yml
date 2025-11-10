@@ -1,0 +1,40 @@
+name: rx
+on:
+  workflow_dispatch:
+
+jobs:
+  fetch_rx:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install httpx pycryptodome
+
+      - name: Clone repo
+        run: |
+          git clone https://${{ secrets.SCRAPER_TOKEN }}@github.com/${{ secrets.SCRAPER_REPO }} rx-repo
+
+      - name: Run Python script
+        run: |
+          cd rx-repo
+          python rx.py
+
+      - name: Commit and push output
+        run: |
+          cd rx-repo
+          git config --global user.name "actions-user"
+          git config --global user.email "actions@github.com"
+          
+          git add rx.json
+          
+          # Commit only if changes exist
+          git diff --cached --quiet || git commit -m "Update output file"
+          
+          # Push changes
+          git push
