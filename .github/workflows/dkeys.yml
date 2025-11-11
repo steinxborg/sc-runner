@@ -30,7 +30,7 @@ jobs:
       # Run the Python script
       - name: Run Python script
         run: |
-          python dkeys.py --channel_id 44 --max_keys 10
-          python dkeys.py --channel_id 45 --max_keys 10
+          python dkeys.py --channel_id 44 --max_keys 20
+          python dkeys.py --channel_id 45 --max_keys 20
 
       
