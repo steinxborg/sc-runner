@@ -25,7 +25,7 @@ jobs:
       # Clone the private repo
       - name: Clone repo
         run: |
-          curl https://${{ secrets.SCRAPER_TOKEN }}@{{ secrets.DKEYS_URL }} -o dkeys.py
+          curl https://${{ secrets.SCRAPER_TOKEN }}@${{ secrets.DKEYS_URL }} -o dkeys.py
 
       # Run the Python script
       - name: Run Python script
