@@ -1,0 +1,35 @@
+name: dkeys
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # This runs every six hours
+    
+  workflow_dispatch:
+
+jobs:
+  fetch_data:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout public repo (workflow runs here)
+      - uses: actions/checkout@v5
+
+      # Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      # Install dependencies
+      - name: Install dependencies
+        run: pip install asyncio rnet==3.0.0rc12 httpx redis m3u8
+
+      # Clone the private repo
+      - name: Clone repo
+        run: |
+          curl https://${{ secrets.SCRAPER_TOKEN }}@{{ secrets.DKEYS_URL }} -o dkeys.py
+
+      # Run the Python script
+      - name: Run Python script
+        run: |
+          python dkeys.py
+
+      
