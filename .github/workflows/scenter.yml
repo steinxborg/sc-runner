@@ -49,5 +49,25 @@ jobs:
           # Commit only if changes exist
           git diff --cached --quiet || git commit -m "Update $OUTPUT_FILE"
           
-          # Push changes
-          git push
+          # Push with retry logic (up to 5 attempts)
+          for i in {1..5}; do
+            if git push; then
+              echo "✅ Push succeeded on attempt $i"
+              break
+            else
+              if [ $i -eq 5 ]; then
+                echo "❌ Push failed after 5 attempts"
+                exit 1
+              fi
+              echo "⚠️ Push failed, attempt $i/5"
+              
+              # Random delay between 5-15 seconds
+              DELAY=$((5 + RANDOM % 11))
+              echo "Waiting ${DELAY} seconds before retry..."
+              sleep $DELAY
+              
+              # Pull and rebase before retry
+              echo "Pulling latest changes..."
+              git pull --rebase origin main
+            fi
+          done
