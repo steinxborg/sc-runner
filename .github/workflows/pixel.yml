@@ -24,7 +24,7 @@ jobs:
 
       # Install dependencies
       - name: Install dependencies
-        run: pip install httpx pycryptodome beautifulsoup4 curl_cffi
+        run: pip install httpx pycryptodome beautifulsoup4 curl_cffi pytz
 
       # Clone the private repo
       - name: Clone repo
