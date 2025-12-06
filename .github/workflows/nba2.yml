@@ -33,12 +33,7 @@ jobs:
         run: |
           git clone https://${{ secrets.SCRAPER_TOKEN }}@github.com/${{ secrets.NBA_REPO }} $REPO_FOLDER
       
-      - name: Run script
-        run: |
-          cd $REPO_FOLDER
-          python $SCRIPT_NAME
-      
-      - name: Commit and Push with Retry
+      - name: Run Script, Commit and Push with Retry
         run: |
           cd $REPO_FOLDER
           git config user.name "actions-user"
