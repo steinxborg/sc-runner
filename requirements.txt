@@ -3,3 +3,4 @@ httpx
 bs4
 pycryptodome
 ua_generator
+pytz
