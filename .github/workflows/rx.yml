@@ -27,7 +27,7 @@ jobs:
           python-version: "3.x"
       
       - name: Install dependencies
-        run: pip install httpx pycryptodome ua_generator
+        run: pip install httpx pycryptodome ua_generator curl_cffi bs4
       
       - name: Clone target repo
         run: |
