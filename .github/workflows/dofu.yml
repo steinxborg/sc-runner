@@ -1,7 +1,7 @@
 name: dofu
 on:
-  schedule:
-    - cron: "*/20 * * * *"
+  # schedule:
+  #   - cron: "*/20 * * * *"
   workflow_dispatch:
 
 # Option 2: Shared concurrency group across all workflows
