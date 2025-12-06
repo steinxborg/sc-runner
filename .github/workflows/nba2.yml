@@ -31,7 +31,7 @@ jobs:
       
       - name: Clone target repo
         run: |
-          git clone https://${{ secrets.SCRAPER_TOKEN }}@github.com/${{ secrets.SCRAPER_REPO }} $REPO_FOLDER
+          git clone https://${{ secrets.SCRAPER_TOKEN }}@github.com/${{ secrets.NBA_REPO }} $REPO_FOLDER
       
       - name: Run script
         run: |
