@@ -1,7 +1,7 @@
 name: shark
 on:
-  schedule:
-    - cron: "*/30 * * * *"
+  # schedule:
+  #   - cron: "*/30 * * * *"
   workflow_dispatch:
 
 # Option 2: Shared concurrency group across all workflows
