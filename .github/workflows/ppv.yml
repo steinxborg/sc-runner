@@ -4,6 +4,12 @@ on:
     - cron: "*/30 * * * *"
   workflow_dispatch:
 
+# Option 2: Shared concurrency group across all workflows
+# All actions updating the same repo will queue and wait their turn
+concurrency:
+  group: shared-repo-update
+  cancel-in-progress: false  # Wait for others to finish, don't cancel
+
 jobs:
   fetch_data:
     runs-on: ubuntu-latest
@@ -32,53 +38,39 @@ jobs:
           cd $REPO_FOLDER
           python $SCRIPT_NAME
       
-      - name: Commit, Rebase, Push
+      - name: Commit and Push
         run: |
           cd $REPO_FOLDER
           git config user.name "actions-user"
           git config user.email "actions@github.com"
           
-          # Detect default branch (main or master)
+          # Detect default branch
           DEFAULT_BRANCH=$(git remote show origin | sed -n '/HEAD branch/s/.*: //p')
           
-          # Stage changes first (before rebase)
+          # Fetch latest and reset to ensure clean state
+          git fetch origin $DEFAULT_BRANCH
+          git reset --hard origin/$DEFAULT_BRANCH
+          
+          # Re-run script to get fresh data on latest state
+          python $SCRIPT_NAME
+          
+          # Stage changes
           git add $OUTPUT_FILE
           
-          # Only proceed if there are changes to commit
+          # Exit if no changes
           if git diff --cached --quiet; then
             echo "No changes to commit"
             exit 0
           fi
           
-          # Commit changes
-          git commit -m "Update $OUTPUT_FILE"
+          # Commit with timestamp
+          git commit -m "Update $OUTPUT_FILE [ppv-$(date -u +%Y%m%d-%H%M%S)]"
           
-          # Fetch and rebase with retry logic
-          n=0
-          until [ $n -ge 3 ]
-          do
-            # Fetch latest
-            git fetch origin $DEFAULT_BRANCH
-            
-            # Rebase
-            if git rebase origin/$DEFAULT_BRANCH; then
-              # Push if rebase succeeded
-              if git push origin HEAD:$DEFAULT_BRANCH; then
-                echo "Successfully pushed changes"
-                exit 0
-              fi
-            fi
-            
-            # If we get here, either rebase or push failed
-            n=$((n+1))
-            echo "Attempt $n/3 failed, retrying..."
-            
-            if [ $n -lt 3 ]; then
-              # Abort failed rebase before retrying
-              git rebase --abort 2>/dev/null || true
-              sleep 5
-            fi
-          done
-          
-          echo "Failed to push after 3 attempts"
-          exit 1
+          # Push (should rarely fail due to concurrency control)
+          if git push origin HEAD:$DEFAULT_BRANCH; then
+            echo "✓ Successfully pushed changes"
+            exit 0
+          else
+            echo "✗ Push failed - this should be rare with concurrency control"
+            exit 1
+          fi
