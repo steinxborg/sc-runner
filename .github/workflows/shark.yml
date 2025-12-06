@@ -64,7 +64,7 @@ jobs:
           fi
           
           # Commit with timestamp
-          git commit -m "Update $OUTPUT_FILE [ppv-$(date -u +%Y%m%d-%H%M%S)]"
+          git commit -m "Update $OUTPUT_FILE [${SCRIPT_NAME}-$(date -u +%Y%m%d-%H%M%S)]"
           
           # Push (should rarely fail due to concurrency control)
           if git push origin HEAD:$DEFAULT_BRANCH; then
