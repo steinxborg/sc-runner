@@ -1,7 +1,7 @@
 name: sbtw
 on:
-  schedule:
-    - cron: "*/40 * * * *"
+  # schedule:
+  #   - cron: "*/40 * * * *"
   workflow_dispatch:
 
 # Option 2: Shared concurrency group across all workflows
