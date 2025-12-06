@@ -1,5 +1,4 @@
 name: ppv
-
 on:
   schedule:
     - cron: "*/30 * * * *"
@@ -8,57 +7,78 @@ on:
 jobs:
   fetch_data:
     runs-on: ubuntu-latest
-
     env:
       REPO_FOLDER: ppv-repo
       SCRIPT_NAME: ppv.py
       OUTPUT_FILE: ppv.json
-
+    
     steps:
       - uses: actions/checkout@v5
-
+      
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.x"
-
+      
       - name: Install dependencies
         run: pip install httpx pycryptodome ua_generator
-
+      
       - name: Clone target repo
         run: |
           git clone https://${{ secrets.SCRAPER_TOKEN }}@github.com/${{ secrets.SCRAPER_REPO }} $REPO_FOLDER
-
+      
       - name: Run script
         run: |
           cd $REPO_FOLDER
           python $SCRIPT_NAME
-
+      
       - name: Commit, Rebase, Push
         run: |
           cd $REPO_FOLDER
           git config user.name "actions-user"
           git config user.email "actions@github.com"
-
+          
           # Detect default branch (main or master)
           DEFAULT_BRANCH=$(git remote show origin | sed -n '/HEAD branch/s/.*: //p')
-
-          # Fetch latest remote commits
-          git fetch origin $DEFAULT_BRANCH
-
-          # Rebase local changes on latest remote state
-          git rebase origin/$DEFAULT_BRANCH || (echo "Rebase failed" && exit 1)
-
-          # Stage and commit changes only if they exist
+          
+          # Stage changes first (before rebase)
           git add $OUTPUT_FILE
-          git diff --cached --quiet || git commit -m "Update $OUTPUT_FILE"
-
-          # Retry push if there are concurrent changes (3 attempts)
+          
+          # Only proceed if there are changes to commit
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          
+          # Commit changes
+          git commit -m "Update $OUTPUT_FILE"
+          
+          # Fetch and rebase with retry logic
           n=0
           until [ $n -ge 3 ]
           do
-            git push origin HEAD:$DEFAULT_BRANCH && break
+            # Fetch latest
+            git fetch origin $DEFAULT_BRANCH
+            
+            # Rebase
+            if git rebase origin/$DEFAULT_BRANCH; then
+              # Push if rebase succeeded
+              if git push origin HEAD:$DEFAULT_BRANCH; then
+                echo "Successfully pushed changes"
+                exit 0
+              fi
+            fi
+            
+            # If we get here, either rebase or push failed
             n=$((n+1))
-            echo "Push failed due to remote updates, retrying ($n/3)..."
-            sleep 5
+            echo "Attempt $n/3 failed, retrying..."
+            
+            if [ $n -lt 3 ]; then
+              # Abort failed rebase before retrying
+              git rebase --abort 2>/dev/null || true
+              sleep 5
+            fi
           done
+          
+          echo "Failed to push after 3 attempts"
+          exit 1
