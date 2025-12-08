@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       REPO_FOLDER: top-repo
-      SCRIPT_NAME: top.py
+      SCRIPT_NAME: top-nfl.py
       OUTPUT_FILE: top.json
     
     steps:
