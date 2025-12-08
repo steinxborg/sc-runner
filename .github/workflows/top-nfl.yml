@@ -1,4 +1,4 @@
-name: top
+name: top-nfl
 on:
 #   schedule:
 #     - cron: "*/30 * * * *"
@@ -7,16 +7,16 @@ on:
 # Use workflow-specific concurrency group to prevent cancellation
 # GitHub cancels waiting scheduled runs if newer ones arrive with same group
 concurrency:
-  group: top-repo-update  # Make this unique per workflow
+  group: top-nfl-repo-update  # Make this unique per workflow
   cancel-in-progress: false
 
 jobs:
   fetch_data:
     runs-on: ubuntu-latest
     env:
-      REPO_FOLDER: top-repo
+      REPO_FOLDER: top-nfl-repo
       SCRIPT_NAME: top-nfl.py
-      OUTPUT_FILE: top.json
+      OUTPUT_FILE: top-nfl.json
     
     steps:
       - uses: actions/checkout@v5
