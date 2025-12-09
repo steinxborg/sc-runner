@@ -20,7 +20,7 @@ jobs:
 
       # Install dependencies
       - name: Install dependencies
-        run: pip install asyncio rnet==3.0.0rc12 httpx redis m3u8 colorama
+        run: pip install asyncio curl_cffi httpx redis m3u8 colorama
 
       # Clone the private repo
       - name: Clone repo
