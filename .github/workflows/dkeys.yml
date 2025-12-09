@@ -1,7 +1,7 @@
 name: dkeys
 on:
   schedule:
-   - cron: '*/10 * * * *'
+   - cron: "0 */1 * * *"
     
   workflow_dispatch:
 
@@ -30,7 +30,8 @@ jobs:
       # Run the Python script
       - name: Run Python script
         run: |
-          python dkeys.py --channel_id 44 --max_keys 20
-          python dkeys.py --channel_id 45 --max_keys 20
+          python dkeys.py --channel_id 44 --max_keys 100
+          python dkeys.py --channel_id 45 --max_keys 100
+          python dkeys.py --channel_id 33 --max_keys 100
 
       
