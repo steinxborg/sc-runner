@@ -64,7 +64,7 @@ jobs:
             # Run script for all providers
             for provider in "${providers[@]}"; do
               echo "Running with provider: $provider"
-              python ../$SCRIPT_NAME --provider $provider --number 2 || echo "Provider $provider failed, continuing..."
+              python $SCRIPT_NAME --provider $provider --number 2 || echo "Provider $provider failed, continuing..."
             done
             
             # Stage changes
