@@ -61,7 +61,7 @@ jobs:
             
             # Run check-status
             echo "Running check-status for baridsite"
-            python ../$SCRIPT_NAME --provider baridsite --check-status
+            python $SCRIPT_NAME --provider baridsite --check-status
             
             # Stage changes
             git add $OUTPUT_FILE
