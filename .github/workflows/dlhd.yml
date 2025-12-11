@@ -15,8 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       REPO_FOLDER: dlhd-repo
-      SCRIPT_NAME: dlhd-schedule.py.py
-      OUTPUT_FILE: dlhd-schedule.py.json
+      SCRIPT_NAME: dlhd-schedule.py
+      OUTPUT_FILE: dlhd-schedule.json
     
     steps:
       - uses: actions/checkout@v5
