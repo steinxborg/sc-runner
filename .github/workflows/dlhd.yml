@@ -1,7 +1,7 @@
 name: dlhd
 on:
-  schedule:
-    - cron: "*/26 * * * *"
+  # schedule:
+  #   - cron: "*/26 * * * *"
   workflow_dispatch:
 
 # Use workflow-specific concurrency group to prevent cancellation
