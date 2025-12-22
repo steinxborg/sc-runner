@@ -7,7 +7,7 @@ on:
 # Use workflow-specific concurrency group to prevent cancellation
 # GitHub cancels waiting scheduled runs if newer ones arrive with same group
 concurrency:
-  group: ae-repo-update  # Make this unique per workflow
+  group: scenter-repo-update  # Make this unique per workflow
   cancel-in-progress: false
 
 jobs:
