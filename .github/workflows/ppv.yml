@@ -17,6 +17,7 @@ jobs:
       REPO_FOLDER: ppv-repo
       SCRIPT_NAME: ppv.py
       OUTPUT_FILE: ppv.json
+      ENRICHED_FILE: ppv-enriched.json
     
     steps:
       - uses: actions/checkout@v5
@@ -59,7 +60,7 @@ jobs:
             python $SCRIPT_NAME
             
             # Stage the new changes
-            git add $OUTPUT_FILE
+            git add $OUTPUT_FILE $ENRICHED_FILE
             
             # Check if there are changes after reset
             if git diff --cached --quiet; then
