@@ -31,7 +31,7 @@ jobs:
       
       - name: Clone target repo
         run: |
-          git clone https://${{ secrets.SCRAPER_TOKEN }}@github.com/${{ secrets.PARA_REPO }} $REPO_FOLDER
+          git clone https://${{ secrets.SCRAPER_TOKEN }}@github.com/${{ secrets.SLINGTV_REPO }} $REPO_FOLDER
       
       - name: Run Script, Commit and Push with Retry
         run: |
