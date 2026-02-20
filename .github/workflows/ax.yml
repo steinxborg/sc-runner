@@ -3,13 +3,11 @@ on:
 #   schedule:
 #     - cron: "*/30 * * * *"
   workflow_dispatch:
-
 # Use workflow-specific concurrency group to prevent cancellation
 # GitHub cancels waiting scheduled runs if newer ones arrive with same group
 concurrency:
   group: ax-repo-update  # Make this unique per workflow
   cancel-in-progress: false
-
 jobs:
   fetch_data:
     runs-on: ubuntu-latest
@@ -43,6 +41,11 @@ jobs:
           # Detect default branch
           DEFAULT_BRANCH=$(git remote show origin | sed -n '/HEAD branch/s/.*: //p')
           
+          # Run the script ONCE and save outputs to a temp location outside the repo
+          python $SCRIPT_NAME
+          cp $OUTPUT_FILE /tmp/$OUTPUT_FILE
+          cp $ENRICHED_FILE /tmp/$ENRICHED_FILE
+          
           # Retry loop for push conflicts (up to 5 attempts)
           MAX_RETRIES=5
           RETRY_COUNT=0
@@ -50,19 +53,17 @@ jobs:
           while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
             echo "Attempt $((RETRY_COUNT + 1))/$MAX_RETRIES"
             
-            # Fetch latest remote state
+            # Fetch latest remote state and reset to it
             git fetch origin $DEFAULT_BRANCH
-            
-            # Reset to latest remote (ensures clean state)
             git reset --hard origin/$DEFAULT_BRANCH
             
-            # Re-run the script to generate fresh data
-            python $SCRIPT_NAME
+            # Re-apply the already-generated output files (no re-running the script)
+            cp /tmp/$OUTPUT_FILE $OUTPUT_FILE
+            cp /tmp/$ENRICHED_FILE $ENRICHED_FILE
             
-            # Stage the new changes
+            # Stage the changes
             git add $OUTPUT_FILE $ENRICHED_FILE
             
-            # Check if there are changes after reset
             if git diff --cached --quiet; then
               echo "No changes after sync with remote"
               exit 0
@@ -70,17 +71,14 @@ jobs:
             
             git commit -m "Update $OUTPUT_FILE [${SCRIPT_NAME}-$(date -u +%Y%m%d-%H%M%S)]"
             
-            # Try to push
             if git push origin HEAD:$DEFAULT_BRANCH; then
               echo "✓ Successfully pushed changes"
               exit 0
             fi
             
-            # Push failed, increment counter and retry
             RETRY_COUNT=$((RETRY_COUNT + 1))
             
             if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
-              # Add exponential backoff with jitter to avoid collisions
               SLEEP_TIME=$((2 ** RETRY_COUNT + RANDOM % 5))
               echo "Push failed, waiting ${SLEEP_TIME}s before retry..."
               sleep $SLEEP_TIME
