@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       REPO_FOLDER: nba2-repo
-      SCRIPT_NAME: app.py
+      SCRIPT_NAME: nba2.py
       OUTPUT_FILE: nba2.json
     
     steps:
