@@ -28,7 +28,7 @@ jobs:
           python-version: "3.x"
       
       - name: Install dependencies
-        run: pip install -r blackboxprotobuf curl-cffi pycryptodome
+        run: pip install -r bbpb curl-cffi pycryptodome
       
       - name: Clone target repo
         run: |
