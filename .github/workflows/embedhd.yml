@@ -59,8 +59,8 @@ jobs:
             # Re-run the script to generate fresh data
             python $SCRIPT_NAME
             
-            # Stage the new changes
-            git add $OUTPUT_FILE
+            # Stage the new changes 
+            git add $OUTPUT_FILE $ENRICHED_FILE
             
             # Check if there are changes after reset
             if git diff --cached --quiet; then
