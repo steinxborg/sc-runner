@@ -1,4 +1,4 @@
-name: schedule
+name: dlhd-schedule
 on:
 #   schedule:
 #     - cron: "*/30 * * * *"
@@ -7,14 +7,14 @@ on:
 # Use workflow-specific concurrency group to prevent cancellation
 # GitHub cancels waiting scheduled runs if newer ones arrive with same group
 concurrency:
-  group: bee-repo-update  # Make this unique per workflow
+  group: dlhd-schedule-repo-update  # Make this unique per workflow
   cancel-in-progress: false
 
 jobs:
   fetch_data:
     runs-on: ubuntu-latest
     env:
-      REPO_FOLDER: schedule-repo
+      REPO_FOLDER: dlhd-schedule-repo
       SCRIPT_NAME: dlhd-schedule.py
       OUTPUT_FILE: dlhd-schedule.json
       ENRICHED_FILE: dlhd-schedule.json
