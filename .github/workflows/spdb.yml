@@ -59,7 +59,7 @@ jobs:
             python $SCRIPT_NAME
             
             # Stage the new changes
-            git add sportsdb-streams-*.json sportsdb-streams.json
+            git add sportsdb-streams-*.json sportsdb-streams.json utils/libsportsdb_league_cache.json
             
             # Check if there are changes after reset
             if git diff --cached --quiet; then
