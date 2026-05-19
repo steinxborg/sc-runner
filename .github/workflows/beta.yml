@@ -1,4 +1,4 @@
-name: bein
+name: beta
 on:
 #   schedule:
 #     - cron: "*/30 * * * *"
