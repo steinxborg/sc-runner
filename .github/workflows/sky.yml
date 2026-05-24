@@ -57,7 +57,7 @@ jobs:
             git reset --hard origin/$DEFAULT_BRANCH
             
             # Re-run the script to generate fresh data
-            python skysportsnz-events.py --mac mac_sh_15313 --mac mac_sh_104263 --mac mac_sh_16167 --mac mac_sh_16047 --mac mac_sh_16244 --mac mac_sh_15315 --mac mac_sh_15806 --mac mac_sh_76070 --mac mac_sh_16604 --mac mac_sh_16948 --mac mac_sh_ptc1193578352 --mac mac_sh_ptc825848305 --mac mac_sh_ptc1914255910 --mac mac_sh_31226 --mac mac_sh_131133 --filename skysportsnz-events.json
+            python skysportsnz-events-mac.py --mac mac_sh_15313 --mac mac_sh_104263 --mac mac_sh_16167 --mac mac_sh_16047 --mac mac_sh_16244 --mac mac_sh_15315 --mac mac_sh_15806 --mac mac_sh_76070 --mac mac_sh_16604 --mac mac_sh_16948 --mac mac_sh_ptc1193578352 --mac mac_sh_ptc825848305 --mac mac_sh_ptc1914255910 --mac mac_sh_31226 --mac mac_sh_131133 --filename skysportsnz-events.json
             
             # Stage the new changes
             git add skysportsnz-events.json
