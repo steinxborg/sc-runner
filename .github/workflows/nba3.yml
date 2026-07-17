@@ -56,10 +56,11 @@ jobs:
             git reset --hard origin/$DEFAULT_BRANCH
             
             # Re-run the script to generate fresh data
-            python $SCRIPT_NAME
+            python nba3.py
+            python3 wnba3.py
             
             # Stage the new changes
-            git add $OUTPUT_FILE
+            git add nba3.json wnba3.json
             
             # Check if there are changes after reset
             if git diff --cached --quiet; then
