@@ -30,6 +30,9 @@ jobs:
         run: pip install pyplayready httpx m3u8 redis beautifulsoup4 curl_cffi httpx[socks]
       
       - name: Clone target repo
+        env:
+          SCRAPER_TOKEN: ${{ secrets.SCRAPER_TOKEN }}
+          NBA_REPO: ${{ secrets.NBA_REPO }}
         run: |
           AUTH=$(printf 'x-access-token:%s' "$SCRAPER_TOKEN" | base64 -w0)
           echo "::add-mask::$AUTH"
