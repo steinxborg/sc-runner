@@ -35,7 +35,7 @@ jobs:
           echo "::add-mask::$AUTH"
           for i in 1 2 3 4 5; do
             if git clone -c http.extraheader="AUTHORIZATION: basic $AUTH" \
-                "https://github.com/${SCRAPER_REPO%.git}.git" "$REPO_FOLDER"; then
+                "https://github.com/${NBA_REPO%.git}.git" "$REPO_FOLDER"; then
               exit 0
             fi
             echo "Clone failed ($i/5), retrying..."
