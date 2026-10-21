@@ -71,7 +71,7 @@ jobs:
             git reset --hard origin/$DEFAULT_BRANCH
             
             # Re-run the script to generate fresh data
-            python $SCRIPT_NAME
+            python nba.py --extra --extra-require-live
             
             # Stage the new changes
             git add $OUTPUT_FILE
