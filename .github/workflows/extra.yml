@@ -15,6 +15,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       REPO_FOLDER: extra-repo
+      SCRIPT_NAME: extra-streams.py
+      OUTPUT_FILE: extra-streams.json
+      ENRICHED_FILE: extra-streams-enriched.json
     
     steps:
       - uses: actions/checkout@v5
@@ -30,13 +33,13 @@ jobs:
       - name: Clone target repo
         env:
           SCRAPER_TOKEN: ${{ secrets.SCRAPER_TOKEN }}
-          EXTRA_SCRAPER_REPO: ${{ secrets.EXTRA_SCRAPER_REPO }}
+          SCRAPER_REPO: ${{ secrets.SCRAPER_REPO }}
         run: |
           AUTH=$(printf 'x-access-token:%s' "$SCRAPER_TOKEN" | base64 -w0)
           echo "::add-mask::$AUTH"
           for i in 1 2 3 4 5; do
             if git clone -c http.extraheader="AUTHORIZATION: basic $AUTH" \
-                "https://github.com/${EXTRA_SCRAPER_REPO%.git}.git" "$REPO_FOLDER"; then
+                "https://github.com/${SCRAPER_REPO%.git}.git" "$REPO_FOLDER"; then
               exit 0
             fi
             echo "Clone failed ($i/5), retrying..."
@@ -69,10 +72,10 @@ jobs:
             git reset --hard origin/$DEFAULT_BRANCH
             
             # Re-run the script to generate fresh data
-            python app.py 
+            python extra-streams.py
             
             # Stage the new changes
-            git add *.json
+            git add extra-streams.json
             
             # Check if there are changes after reset
             if git diff --cached --quiet; then
